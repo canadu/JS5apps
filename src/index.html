@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 5-Apps & Webpack</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/index.js" type="module" defer></script>
+</head>
+
+<body>
+    <!-- nav bar -->
+    <nav id='nav'></nav>
+
+    <!-- root element -->
+    <div id="root">
+        <section id="cover" class='active'>
+            <h1>Enjoy Coding!</h1>
+            <br>
+            <br>
+            <h2>Let's Brush up JS Coding Skill</h2>
+            <h2>and</h2>
+            <h2>Learn the Usage of Webpack</h2>
+        </section>
+
+        <!-- to_do list app -->
+        <section id="todo" class='app'>
+            <!-- <h1>TODO LIST</h1> -->
+            <div>
+                <form class="td-search-form">
+                    <label for="" class="td-label">SEARCH</label>
+                    <input type="text" class="td-search-input" placeholder="Search....">
+                </form>
+                <form class="td-add-form">
+                    <label class="td-label">ADD</label>
+                    <input type="text" class="td-add-input" placeholder="Add....">
+                </form>
+            </div>
+            <div class="todo-container">
+                <h2>Remains to do</h2>
+                <ul class="todos">
+
+                </ul>
+            </div>
+            <div class="done-container">
+                <h2>Already done</h2>
+                <ul class="dones">
+
+                </ul>
+            </div>
+        </section>
+        <!-- to_do list app -->
+
+        <!-- typing app -->
+        <section id="typing" class='app'>
+            <!-- <h1>Typing</h1> -->
+
+            <!-- ３画面で構成されている -->
+            <!-- Scriptで画面を切り替えます -->
+
+            <!-- １、スタート画面 -->
+            <div id="ty-start-page" class="show">
+                <h1>Typing Challenge</h1>
+                <div>
+                    Timelimit:
+                    <select class="ty-time-select" list="time-list">
+                        <optgroup id="time-list">
+                            <option value="10">10 seconds</option>
+                            <option value="20">20 seconds</option>
+                            <!-- デフォルト30秒 -->
+                            <option value="30" selected>30 seconds</option>
+                            <option value="45">45 seconds</option>
+                            <option value="60">60 seconds</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <h2>Are you ready?</h2>
+                <p>Select TimeLimit & Press <span>Enter</span> to Start</p>
+            </div>
+
+            <!-- ２、入力画面 -->
+            <div id="ty-game">
+                <h2><span id="ty-title-time"></span> Seconds TYPING CHALLENGE</h2>
+                <div>
+                    <span>REMAINING TIME</span>
+                    <span id="ty-timer"></span>
+                    <span>s</span>
+                </div>
+                <div id="ty-quote-container">
+                    <div id="ty-quote"></div>
+                    <div id="ty-author">Author:
+                        <span id="ty-author-name"></span>
+                    </div>
+                </div>
+                <textarea id="ty-textarea"></textarea>
+            </div>
+
+            <!-- ３、結果画面 -->
+            <div id="ty-result-container">
+                <div id="ty-result">
+                    <h3>Your typing speed is ....</h3>
+                    <h2 id='ty-LPM'></h2><span>[ letters per a minute ]</span>
+                    <div id="ty-back-to-start">Back to Start Page</div>
+                </div>
+                <div id="ty-quote-review"></div>
+            </div>
+        </section>
+        <!-- typing app -->
+
+        <!-- slide-puzzle app -->
+        <section id="slide-puzzle" class='app'>
+
+            <!-- メニュー画面 -->
+            <div class="sp-cover">
+                <!-- <h1>Slide Puzzle</h1> -->
+                <ul class="sp-menu">
+                    <p>select the level</p>
+                    <li data-level="easy">easy</li>
+                    <li data-level="medium">medium</li>
+                    <li data-level="difficult">difficult</li>
+                </ul>
+            </div>
+
+            <!-- ゲーム画面 -->
+            <div class="sp-container">
+                <img src="" alt="" id="sp-original-image">
+                <div class="sp-info-panel">
+                    <img src="./images/slide_puzzle/picture.png" alt="" id="sp-show-original-btn">
+                    <div class="sp-moves">Moves: <span class="sp-counter"></span></div>
+                    <div class="sp-back-to-menu">Back to Menu</div>
+                </div>
+                <div class="sp-screen">
+                </div>
+            </div>
+
+        </section>
+
+        <!-- memory-card app -->
+        <section id="memory-card" class='app'>
+            <h1>Memory Card</h1>
+        </section>
+
+        <!--  game-of-life app -->
+        <section id='life' class='app'>
+            <h1>Game of Life</h1>
+        </section>
+    </div>
+</body>
+
+</html>
