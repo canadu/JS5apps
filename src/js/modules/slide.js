@@ -8,7 +8,7 @@ const menu = document.querySelectorAll('.sp-menu > li');
 // 戻るボタン
 const backToMenu = document.querySelector('.sp-back-to-menu');
 
-//元画像a
+//元画像
 const originalImage = document.querySelector('#sp-original-image');
 
 //元画像表示、非表示ボタン
@@ -16,6 +16,8 @@ const showOriginalBtn = document.querySelector('#sp-show-original-btn');
 
 //タイル領域
 const screen = document.querySelector('.sp-screen');
+
+const counter = document.querySelector('.sp-counter');
 
 let level;
 let size;
@@ -26,7 +28,6 @@ let tiles;
 let count = 0;
 const images = ['space', 'veges'];
 let selectedImage;
-
 //レベルの連想配列
 const levelMap = {
     easy: {
@@ -66,7 +67,7 @@ menu.forEach(item => {
                 orderedArray.push(tileXY);
             }
         }
-
+        hiddenTileIndex = Math.floor(Math.random() * size ** 2);
         //グリッド列数をCSSに設定する
         screen.style.gridTemplateColumns = levelMap[level].grid;
         start();
@@ -76,6 +77,7 @@ menu.forEach(item => {
 // 戻るボタンをクリックした場合、cssの非表示を削除する
 backToMenu.addEventListener('click', () => {
     menuCover.classList.remove('hide');
+    screen.classList.remove('zoom');
 })
 
 //元画像をimgタグにセットする関数
@@ -85,6 +87,14 @@ function setOriginalImage() {
     selectedImage = images[Math.floor(Math.random() * images.length)];
     //元の1枚画像をimgタグのsrcに設定
     originalImage.setAttribute('src', `./images/slide_puzzle/${selectedImage}/${selectedImage}.png`);
+}
+
+originalImage.onload = () => {
+    const naturalWidth = originalImage.naturalWidth;
+    const naturalHeight = originalImage.naturalHeight;
+    const ratio = Math.floor(naturalHeight / naturalWidth * 1000) / 1000;
+    screen.style.width = "480px";
+    screen.style.height = `${Math.floor(480 * ratio)}px`;
 }
 
 //マウスオーバーで元画像を表示、非表示する
@@ -98,16 +108,13 @@ showOriginalBtn.addEventListener('mouseleave', () => {
 //選択したレベルに応じて、パズル領域に画像を追記していく
 function renderTiles(arr) {
     screen.innerHTML = '';
-
     arr.forEach((tile, index) => {
         const div = document.createElement('div');
         div.classList.add('sp-tile');
-
         //非表示タイルの場合、hiddenクラスを追加
         if (index === hiddenTileIndex) {
             div.classList.add('hidden');
         }
-
         div.style.backgroundImage = `url(./images/slide_puzzle/${selectedImage}/${level}/tile${tile}.png)`;
         screen.appendChild(div);
     })
@@ -115,5 +122,70 @@ function renderTiles(arr) {
 
 function start() {
     setOriginalImage();
+    count = 0;
+    counter.textContent = count;
+    tilesArray = generateShuffledArray(orderedArray);
     renderTiles(orderedArray);
+    updateScreen();
+}
+
+function generateShuffledArray(arr) {
+    let shuffledArray = arr.slice();
+    for (let i = shuffledArray.length - 1; i > -1; i--) {
+        let randomIndex = Math.floor(Math.random() * shuffledArray.length);
+        let tempValue = shuffledArray[i];
+        shuffledArray[i] = shuffledArray[randomIndex];
+        shuffledArray[randomIndex] = tempValue;
+    }
+    return shuffledArray
+}
+
+function updateScreen() {
+    tiles = document.querySelectorAll('.sp-tile');
+    const hiddenTileRow = Math.floor(hiddenTileIndex / size);
+    const hiddenTileCol = hiddenTileIndex % size;
+
+    function generateNewArray(arr, index, hiddenTileIndex) {
+        const tempValue = arr[index];
+        arr[index] = arr[hiddenTileIndex];
+        arr[hiddenTileIndex] = tempValue;
+        return arr
+    }
+
+    function updateTiles(index) {
+        tilesArray = generateNewArray(tilesArray, index, hiddenTileIndex);
+        hiddenTileIndex = index;
+        renderTiles(tilesArray);
+        count++;
+        counter.textContent = count;
+        setTimeout(() => {
+            if (JSON.stringify(tilesArray) === JSON.stringify(orderedArray)) {
+                complete();
+            }
+        }, 500)
+    }
+
+    tiles.forEach((tile, index) => {
+        tile.addEventListener('click', () => {
+            const now = Math.floor(index / size);
+            const col = index % size;
+            if (level === 'easy') {
+                updateTiles(index);
+            } else {
+                if (row === hiddenTileRow && Math.abs(col - hiddenTileCol) === 1
+                    || col === hiddenTileCol && Math.abs(row - hiddenTileRow) === 1) {
+                    updateTiles(index);
+                }
+            }
+            updateScreen();
+        })
+    })
+}
+
+function complete() {
+    tiles[hiddenTileIndex].classList.remove('hidden');
+    screen.classList.add('zoom');
+    tiles.forEach(tile => {
+        tile.classList.add('complete');
+    })
 }
