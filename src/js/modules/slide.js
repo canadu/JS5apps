@@ -1,4 +1,3 @@
-
 //メニュー画面
 const menuCover = document.querySelector('.sp-cover');
 
@@ -67,6 +66,7 @@ menu.forEach(item => {
                 orderedArray.push(tileXY);
             }
         }
+        //
         hiddenTileIndex = Math.floor(Math.random() * size ** 2);
         //グリッド列数をCSSに設定する
         screen.style.gridTemplateColumns = levelMap[level].grid;
@@ -89,6 +89,7 @@ function setOriginalImage() {
     originalImage.setAttribute('src', `./images/slide_puzzle/${selectedImage}/${selectedImage}.png`);
 }
 
+//画像のロードされてから関数が実行される
 originalImage.onload = () => {
     const naturalWidth = originalImage.naturalWidth;
     const naturalHeight = originalImage.naturalHeight;
@@ -125,11 +126,13 @@ function start() {
     count = 0;
     counter.textContent = count;
     tilesArray = generateShuffledArray(orderedArray);
-    renderTiles(orderedArray);
+    renderTiles(tilesArray);
     updateScreen();
 }
 
+//配列の値をランダムに入れ替える
 function generateShuffledArray(arr) {
+    //配列の後ろから、ランダムな値が格納される
     let shuffledArray = arr.slice();
     for (let i = shuffledArray.length - 1; i > -1; i--) {
         let randomIndex = Math.floor(Math.random() * shuffledArray.length);
@@ -145,6 +148,10 @@ function updateScreen() {
     const hiddenTileRow = Math.floor(hiddenTileIndex / size);
     const hiddenTileCol = hiddenTileIndex % size;
 
+    //タイルの入れ替えを行う
+    //arr:タイルの配列
+    //index:クリックされたタイルのインデックス
+    //hiddenTileIndex:入れかえるタイルのインデックス
     function generateNewArray(arr, index, hiddenTileIndex) {
         const tempValue = arr[index];
         arr[index] = arr[hiddenTileIndex];
@@ -152,11 +159,12 @@ function updateScreen() {
         return arr
     }
 
+
     function updateTiles(index) {
         tilesArray = generateNewArray(tilesArray, index, hiddenTileIndex);
         hiddenTileIndex = index;
         renderTiles(tilesArray);
-        count++;
+        count++; //カウントをインクリメント
         counter.textContent = count;
         setTimeout(() => {
             if (JSON.stringify(tilesArray) === JSON.stringify(orderedArray)) {
@@ -167,13 +175,16 @@ function updateScreen() {
 
     tiles.forEach((tile, index) => {
         tile.addEventListener('click', () => {
-            const now = Math.floor(index / size);
+            //クリックされたタイルの座標
+            const row = Math.floor(index / size);
             const col = index % size;
             if (level === 'easy') {
                 updateTiles(index);
             } else {
-                if (row === hiddenTileRow && Math.abs(col - hiddenTileCol) === 1
-                    || col === hiddenTileCol && Math.abs(row - hiddenTileRow) === 1) {
+                //移動できるタイルの抽出
+                //ブランクと行、列の前後+1と-1(つまり絶対値が1)のタイルと交換できる
+                if (row === hiddenTileRow && Math.abs(col - hiddenTileCol) === 1 ||
+                    col === hiddenTileCol && Math.abs(row - hiddenTileRow) === 1) {
                     updateTiles(index);
                 }
             }
@@ -182,9 +193,12 @@ function updateScreen() {
     })
 }
 
+//タイルが揃ったときに実行される関数
 function complete() {
+    //ブランクタイルを表示
     tiles[hiddenTileIndex].classList.remove('hidden');
     screen.classList.add('zoom');
+    //タイル全てにcompleteクラスを付与
     tiles.forEach(tile => {
         tile.classList.add('complete');
     })
