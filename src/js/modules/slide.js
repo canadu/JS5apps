@@ -134,6 +134,7 @@ function start() {
 function generateShuffledArray(arr) {
     //配列の後ろから、ランダムな値が格納される
     let shuffledArray = arr.slice();
+    //in-placeアルゴリズムを使用
     for (let i = shuffledArray.length - 1; i > -1; i--) {
         let randomIndex = Math.floor(Math.random() * shuffledArray.length);
         let tempValue = shuffledArray[i];
@@ -158,7 +159,6 @@ function updateScreen() {
         arr[hiddenTileIndex] = tempValue;
         return arr
     }
-
 
     function updateTiles(index) {
         tilesArray = generateNewArray(tilesArray, index, hiddenTileIndex);
